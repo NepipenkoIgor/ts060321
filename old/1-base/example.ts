@@ -6,7 +6,7 @@ function deliveryMethod() {
 }
 
 function shipWeight() {
-    const el: HTMLElement | null = document.getElementById('weight');
+    const el: HTMLElement | null = document.getElementById('weight') as HTMLDivElement;
     if (!el) {
         return 0;
     }
@@ -16,6 +16,7 @@ function shipWeight() {
 function sendUpdates(emailAddr: string | string[]) {
     function sendEmail(addr: string) {
         console.log(`Shipping to ${addr} via ${deliveryMethod() || 'standard'} delivery`);
+
 
         if (shipWeight() > 100) {
             console.log('WARNING: Oversize package');
@@ -30,3 +31,9 @@ function sendUpdates(emailAddr: string | string[]) {
         sendEmail(emailAddr.trim());
     }
 }
+
+
+// function onSearch(event: Event) {
+//     const value: string = (event.target as HTMLInputElement).value;
+//
+// }

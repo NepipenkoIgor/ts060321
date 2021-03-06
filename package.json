@@ -2,9 +2,11 @@
   "name": "ts060321",
   "version": "1.0.0",
   "description": "",
-  "main": "example.ts",
+  "main": "old/1-base/example.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +15,15 @@
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.21.0",
-    "typescript": "^4.2.3"
+    "html-webpack-plugin": "^5.2.0",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
   }
 }

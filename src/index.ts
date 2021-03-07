@@ -56,11 +56,11 @@ type Fn1 = (a: number) => (b: number) => number;
 type NonFunction<T> = T extends (...args: any) => any ? never : T;
 
 type FnParamsAndReturn<T> = T extends (...args: infer Args) => infer R
-    ? Args | R
+    ? NonFunction<Args[keyof Args]> | R
     : never
 
 
-const v4: FnParamsAndReturn<(a: number, b: string) => boolean> = null
+const v4: FnParamsAndReturn<(a: number, b: string) => boolean> = ()=>{}
 
 
 interface Example {

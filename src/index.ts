@@ -1,34 +1,83 @@
+// T extends U ? X : Y;
 
-interface IUser {
+type nonUndefined<T> = T extends undefined | number ? never : T;
+type snbu = string | boolean | undefined | number
+const a: nonUndefined<string | boolean | undefined | number> = null;
+
+interface IHydrantM {
     name: string;
-    age: number;
 }
 
-interface IProduct {
+interface IHydrantA {
     name: string;
-    price: number;
 }
 
-interface ICartProduct extends IProduct {
-    count: number;
+interface IHydrantB {
+    name: string;
 }
 
-interface IState {
-    user: IUser;
-    products: IProduct[];
-    cartProducts: ICartProduct[];
+// TODO
+type Hydrants = IHydrantM | IHydrantA | IHydrantB;
+
+let h: IHydrantM = {
+    name: 'hydrant'
 }
 
-type Select<TState> = <TField extends keyof TState>(state: TState, field: TField) => TState[TField];
+type E<T> = T extends IHydrantA ? never : T
 
-const state: IState = {
-    user: {name: 'Ihor', age: 35},
-    products: [{name: 'IPhone 8', price: 1000}, {name: 'IPhone XR', price: 1500}],
-    cartProducts: [{name: 'IPhone 8', price: 1000, count: 10}],
+
+const e: Exclude<Hydrants, IHydrantM> = h;
+//
+
+// First element in tuple and get return value
+
+const arr: [() => boolean, () => null | number] = [];
+
+
+// type FirstElReturnType<T> =
+//      T extends [infer U, ...unknown[]]
+//          ? U extends (...args: unknown[]) => infer R
+//              ? R
+//              : never
+//          : never
+
+// type FirstElReturnType<T> =
+//     T extends [infer U, ...unknown[]]
+//         ? ReturnType<U>
+//         : never
+//
+// const v2: FirstElReturnType<typeof arr> = 1;
+
+
+type Fn1 = (a: number) => (b: number) => number;
+
+// (a: number, b: string) => boolean  ====> number |  string | boolean
+
+type NonFunction<T> = T extends (...args: any) => any ? never : T;
+
+type FnParamsAndReturn<T> = T extends (...args: infer Args) => infer R
+    ? Args | R
+    : never
+
+
+const v4: FnParamsAndReturn<(a: number, b: string) => boolean> = null
+
+
+interface Example {
+    prop1: number;
+    prop2: string;
+
+    prop3(): boolean
 }
 
-const select: Select<IState> = (state, field) => state[field];
 
-const user3: IUser = select(state, 'user');
-const product: IProduct[] = select(state, 'products');
-const cart: ICartProduct[] = select(state, 'cartProducts');
+interface Example {
+    prop1: number;
+    prop2: string;
+
+    prop3(): boolean;
+    prop4(): number;
+}
+
+const aa: NonFunction<Example[keyof Example]>  = true
+

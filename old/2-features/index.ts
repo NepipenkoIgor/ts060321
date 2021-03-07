@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost';
 /**Object */
 const firstName = 'Ihor';
 
-const account = {
+const account: IUser1Account = {
     firstName,
     getName() {
         return this.firstName;
@@ -44,10 +44,18 @@ class Point {
 
 /**template string*/
 
-function userMessage([start, end]: TemplateStringsArray, {firstName: name}: typeof account) {
+interface  IUser1Account {
+    firstName: string;
+    getName(): string;
+}
+
+function userMessage([start, end]: TemplateStringsArray, {firstName: name}: IUserAccount) {
     return `${start}${name}${end}`;
 }
 
 console.log(userMessage`Good day, ${person} !!!!`);
 
 // let arr = [1, 2, 3].includes(12);
+
+//let {a: {b}}  = {a: {b: 2}};
+//let b = a.b;

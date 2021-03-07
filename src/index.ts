@@ -1,83 +1,57 @@
-// T extends U ? X : Y;
-
-type nonUndefined<T> = T extends undefined | number ? never : T;
-type snbu = string | boolean | undefined | number
-const a: nonUndefined<string | boolean | undefined | number> = null;
-
-interface IHydrantM {
-    name: string;
+type NotReadonlyButOptional<T> = {
+    -readonly [P in keyof T]?: T[P]
 }
 
-interface IHydrantA {
-    name: string;
+interface IUserAcc {
+    readonly name: string;
+    readonly age: number;
+    info: { male: boolean };
+    subject?: string[]
 }
 
-interface IHydrantB {
-    name: string;
+let v: NotReadonlyButOptional<IUserAcc> = {
+    age: 35
 }
 
-// TODO
-type Hydrants = IHydrantM | IHydrantA | IHydrantB;
+v.age = 21;
 
-let h: IHydrantM = {
-    name: 'hydrant'
+
+type KeyOfWithExclude<T, E> = {
+    [P in keyof T]: T[P] extends E ? never : P
+}[keyof T]
+
+/* {
+   name: string;
+   age: number;
+   info: never
+   subject?: string[]
+}
+*/
+
+let v0: keyof IUserAcc // name | age | info | subject
+let v1: KeyOfWithExclude<IUserAcc, { male: boolean } | string> = 'age'
+let v2: KeyOfWithExclude<IUserAcc, string> = 'name' //  age | info | subject
+let v3: KeyOfWithExclude<IUserAcc, { male: boolean }> = 'age' //  age | name | subject
+let v4: KeyOfWithExclude<IUserAcc, { male: boolean }> = 'subject'
+
+
+
+type CapitalizedAndGet<T> = {
+    [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K]
 }
 
-type E<T> = T extends IHydrantA ? never : T
-
-
-const e: Exclude<Hydrants, IHydrantM> = h;
-//
-
-// First element in tuple and get return value
-
-const arr: [() => boolean, () => null | number] = [];
-
-
-// type FirstElReturnType<T> =
-//      T extends [infer U, ...unknown[]]
-//          ? U extends (...args: unknown[]) => infer R
-//              ? R
-//              : never
-//          : never
-
-// type FirstElReturnType<T> =
-//     T extends [infer U, ...unknown[]]
-//         ? ReturnType<U>
-//         : never
-//
-// const v2: FirstElReturnType<typeof arr> = 1;
-
-
-type Fn1 = (a: number) => (b: number) => number;
-
-// (a: number, b: string) => boolean  ====> number |  string | boolean
-
-type NonFunction<T> = T extends (...args: any) => any ? never : T;
-
-type FnParamsAndReturn<T> = T extends (...args: infer Args) => infer R
-    ? NonFunction<Args[keyof Args]> | R
-    : never
-
-
-const v4: FnParamsAndReturn<(a: number, b: string) => boolean> = ()=>{}
-
-
-interface Example {
-    prop1: number;
-    prop2: string;
-
-    prop3(): boolean
+let userGetter: CapitalizedAndGet<IUserAcc> = {
+    getName: () => 'Ihor',
+    getAge: () => 35,
+    getInfo: () => ({ male: true }),
+    getSubject: () => ['js', 'ts']
 }
 
-
-interface Example {
-    prop1: number;
-    prop2: string;
-
-    prop3(): boolean;
-    prop4(): number;
+type RemoveField<T, E> = {
+    readonly [K in keyof T as Exclude<K, E>]: T[K]
 }
 
-const aa: NonFunction<Example[keyof Example]>  = true
-
+const u: RemoveField<IUserAcc, 'info' | 'subject'> = {
+    name: 'Ihor',
+    age: 35,
+}
